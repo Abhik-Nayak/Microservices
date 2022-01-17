@@ -1,0 +1,54 @@
+.App {
+  text-align: center;
+  justify-content: center;
+}
+
+.abc{
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 50px;
+  margin-bottom: 5px;
+  text-align: left;
+
+}
+
+.card{
+  justify-content: center;
+  text-align: left;
+  padding: 20px;
+  background-color: rgba(245, 245, 245, 0.4);
+  
+}
+
+/* 
+@media screen and (max-width: 1280px) {
+
+    body{
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      height: fit-content;
+    }
+}
+
+@media screen and (max-width: 992px) {
+
+    body{
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      height: fit-content;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+
+    body{ 
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      height: fit-content;
+    }
+} */
+
