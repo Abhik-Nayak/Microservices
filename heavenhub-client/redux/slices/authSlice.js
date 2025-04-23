@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from '@/utils/axiosInstance';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "@/utils/axiosInstance";
 
 const initialState = {
   user: null,
@@ -11,11 +11,14 @@ const initialState = {
 // Async actions
 
 export const registerUser = createAsyncThunk(
-  'auth/registerUser',
+  "auth/registerUser",
   async (formData, thunkAPI) => {
     try {
-      const res = await axios.post('/signup', formData);
-      return res.data;
+      const res = await axios.post("/signup", formData);
+      const { token, user } = res.data.content.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      return { token, user };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }
@@ -23,11 +26,14 @@ export const registerUser = createAsyncThunk(
 );
 
 export const loginUser = createAsyncThunk(
-  'auth/loginUser',
+  "auth/loginUser",
   async (formData, thunkAPI) => {
     try {
-      const res = await axios.post('/signin', formData);
-      return res.data;
+      const res = await axios.post("/signin", formData);
+      const { token, user } = res.data.content.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      return { token, user };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }
@@ -35,11 +41,14 @@ export const loginUser = createAsyncThunk(
 );
 
 export const googleLogin = createAsyncThunk(
-  'auth/googleLogin',
+  "auth/googleLogin",
   async (payload, thunkAPI) => {
     try {
-      const res = await axios.post('/google', payload);
-      return res.data;
+      const res = await axios.post("/google", payload);
+      const { token, user } = res.data.content.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      return { token, user };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }
@@ -48,12 +57,16 @@ export const googleLogin = createAsyncThunk(
 
 // Reducer
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.loading = false;
+      state.error = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {

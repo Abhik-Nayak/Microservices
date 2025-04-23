@@ -1,24 +1,28 @@
-'use client';
+"use client";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/slices/authSlice";
 
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
+export default function DashboardPage() {
+  const dispatch = useDispatch();
 
-const Page = () => {
-  const router = useRouter();
-  const { user } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/auth/signup');
-    }
-  }, [user, router]);
-
-  if (!user) return null; // Or a loading spinner
-
+  const handleLogout = () => {
+    dispatch(logout()); // This clears state + localStorage and redirects
+    window.location.href = "/auth/login";
+  };
   return (
-    <div>Welcome to the protected page!</div>
+    <ProtectedRoute>
+      <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat px-4">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Dashboard
+        </h1>
+        <p className="text-lg text-gray-600">This is a protected route.</p>
+        <p className="text-lg text-gray-600">
+          You must be logged in to see this.
+        </p>
+        <p className="text-lg text-gray-600">Welcome to your dashboard!</p>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    </ProtectedRoute>
   );
-};
-
-export default Page;
+}
