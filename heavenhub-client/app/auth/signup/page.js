@@ -23,7 +23,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (mounted && user && token) {
-      router.push("/"); // 🔐 Redirect to protected route
+      router.push("/dashboard"); // 🔐 Redirect to protected route
     }
   }, [mounted, user, token, router]);
 

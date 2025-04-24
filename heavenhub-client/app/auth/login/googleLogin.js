@@ -2,6 +2,7 @@ import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleLogin as googleLoginThunk } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import Image from "next/image";
 
 const GoogleLogin = () => {
   const dispatch = useDispatch();
@@ -39,9 +40,11 @@ const GoogleLogin = () => {
         onClick={googleLogin}
         className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 py-3 rounded-md text-gray-700 font-semibold hover:shadow-md transition duration-300 ease-in-out transform hover:scale-105"
       >
-        <img
+        <Image
           src="/google-icon.svg" // Make sure you have this icon in your public folder
           alt="Google"
+          width={20}
+          height={20}
           className="w-5 h-5"
         />
         Continue with Google

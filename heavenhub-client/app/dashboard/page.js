@@ -1,9 +1,10 @@
-import React from 'react'
-
-const Dashboard = () => {
-  return (
-    <div>Dashboard</div>
-  )
-}
-
-export default Dashboard
+// app/protected/dashboard/page.js
+export default function DashboardPage() {
+    return (
+      <div>
+        <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
+        <p>This is your protected dashboard page.</p>
+      </div>
+    );
+  }
+  

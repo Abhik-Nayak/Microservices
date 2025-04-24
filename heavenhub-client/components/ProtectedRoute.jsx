@@ -16,7 +16,7 @@ export default function ProtectedRoute({ children }) {
     if (token && user) {
       setIsAuthenticated(true);
     } else {
-      router.push("/auth/signup");
+      router.push("/auth/login");
       setIsAuthenticated(false);
     }
   }, [router]);
