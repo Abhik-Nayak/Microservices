@@ -23,7 +23,7 @@ export default function LogIn() {
 
   useEffect(() => {
     if (mounted && user && token) {
-      router.push("/"); // 🔐 Redirect to protected route
+      router.push("/dashboard"); // 🔐 Redirect to protected route
     }
   }, [mounted, user, token, router]);
 
@@ -85,7 +85,7 @@ export default function LogIn() {
           </p>
         )}
         <p className="text-center mt-6 text-sm text-gray-600">
-          Don't have an account?{" "}
+        {"Don't have an account? "}
           <button
             type="button"
             onClick={() => router.push("/auth/signup")}
