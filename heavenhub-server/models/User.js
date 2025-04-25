@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema({
   picture: { type: String },
   password: { type: String },
   googleId: { type: String },
+  role: {
+    type: String,
+    enum: ["buyer", "seller", "admin"],
+    default: "buyer", // Or choose based on form
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

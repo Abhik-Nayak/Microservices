@@ -11,13 +11,13 @@ const generateToken = (id) => {
 
 // Signup
 exports.signup = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
     const exist = await User.findOne({ email });
     if (exist) return sendError(res, 400, "Email already in use");
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword, role });
 
     const token = generateToken(user._id);
     return sendResponse(res, 201, "User registered successfully", {
