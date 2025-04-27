@@ -14,7 +14,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (formData, thunkAPI) => {
     try {
-      const res = await axios.post("/signup", formData);
+      const res = await axios.post("/user/signup", formData);
       const { token, user } = res.data.content.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
@@ -29,7 +29,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (formData, thunkAPI) => {
     try {
-      const res = await axios.post("/signin", formData);
+      const res = await axios.post("/user/signin", formData);
       const { token, user } = res.data.content.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
@@ -44,7 +44,7 @@ export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
   async (payload, thunkAPI) => {
     try {
-      const res = await axios.post("/google", payload);
+      const res = await axios.post("/user/google", payload);
       const { token, user } = res.data.content.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
