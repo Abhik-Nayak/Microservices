@@ -10,7 +10,9 @@ app.use(cors());
 app.use(express.json());
 
 const authRoutes = require('./routes/authRoutes');
+const listingRoutes = require('./routes/listingRoute');
 app.use('/api/user', authRoutes);
+app.use("/api/listings", listingRoutes);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)

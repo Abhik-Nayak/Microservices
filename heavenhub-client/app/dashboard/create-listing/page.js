@@ -44,7 +44,7 @@ export default function CreateListingPage() {
     e.preventDefault();
     console.log("Submitting Listing: ", formData, localStorage.getItem("user"));
     // TODO: Dispatch redux action or call API
-    dispatch(createListing({details:formData, token:"weq"}));
+    dispatch(createListing(formData));
   };
 
   return (
