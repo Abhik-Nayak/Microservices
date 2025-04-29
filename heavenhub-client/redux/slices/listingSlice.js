@@ -6,11 +6,29 @@ export const createListing = createAsyncThunk(
   "listing/createListing",
   async (listingData, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "/listings/create",
-        listingData,
-      );
-      return response.data;
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append non-file fields
+      for (const [key, value] of Object.entries(listingData)) {
+        if (key !== 'images') {
+          formData.append(key, value);
+        }
+      }
+
+      // Append the images (multiple files)
+      if (listingData.images && listingData.images.length > 0) {
+        listingData.images.forEach((file) => {
+          formData.append('images', file); // 'images' is the field name
+        });
+      }
+      console.log("FormData:", formData); // Debugging line
+
+      // const response = await axios.post(
+      //   "/listings/create",
+      //   formData,
+      // );
+      // return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }

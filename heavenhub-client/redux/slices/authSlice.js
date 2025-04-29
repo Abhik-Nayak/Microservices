@@ -9,7 +9,6 @@ const initialState = {
 };
 
 // Async actions
-
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (formData, thunkAPI) => {

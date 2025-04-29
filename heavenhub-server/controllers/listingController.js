@@ -15,7 +15,7 @@ exports.createListing = async (req, res) => {
       type,
       images,
     } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     if (!title || !address || !price || !bedrooms || !bathrooms || !type) {
       return res.status(400).json({ status: "fail", message: "Please fill all required fields." });

@@ -11,13 +11,13 @@ export default function CreateListingPage() {
   );
   console.log(listings, loading, error, success)
   const [formData, setFormData] = useState({
-    name: "ada",
+    title: "ada",
     description: "sdf",
     address: "sdfs",
     city: "sdfs",
     state: "dsf",
     country: "sdfs",
-    price: "122121",
+    regularPrice: "122121",
     propertyType: "sale",
     bedrooms: 1,
     bathrooms: 1,
@@ -33,10 +33,17 @@ export default function CreateListingPage() {
     }));
   };
 
+  // const handleFileChange = (e) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     images: e.target.files,
+  //   }));
+  // };
   const handleFileChange = (e) => {
+    const files = Array.from(e.target.files); // Convert FileList to Array
     setFormData((prev) => ({
       ...prev,
-      images: e.target.files,
+      images: files, // Store the selected files in the 'images' field
     }));
   };
 
@@ -44,7 +51,7 @@ export default function CreateListingPage() {
     e.preventDefault();
     console.log("Submitting Listing: ", formData, localStorage.getItem("user"));
     // TODO: Dispatch redux action or call API
-    dispatch(createListing(formData));
+    // dispatch(createListing(formData));
   };
 
   return (
@@ -65,7 +72,7 @@ export default function CreateListingPage() {
             </label>
             <input
               type="text"
-              name="name"
+              name="title"
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter property name"
@@ -133,8 +140,8 @@ export default function CreateListingPage() {
             </label>
             <input
               type="number"
-              name="price"
-              value={formData.price}
+              name="regularPrice"
+              value={formData.regularPrice}
               onChange={handleChange}
               placeholder="Price"
               className="input-field"
