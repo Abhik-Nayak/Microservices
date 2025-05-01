@@ -49,9 +49,8 @@ export default function CreateListingPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting Listing: ", formData, localStorage.getItem("user"));
     // TODO: Dispatch redux action or call API
-    // dispatch(createListing(formData));
+    dispatch(createListing(formData));
   };
 
   return (
@@ -73,7 +72,7 @@ export default function CreateListingPage() {
             <input
               type="text"
               name="title"
-              value={formData.name}
+              value={formData.title}
               onChange={handleChange}
               placeholder="Enter property name"
               className="input-field"
