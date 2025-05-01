@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const protect = require("../middlewares/authMiddleware.js");
-const {createListing} = require('../controllers/listingController.js')
+const {createListing,getListings,getListingById, getListingByUserId} = require('../controllers/listingController.js')
 
 
 // Create a new listing
-router.post("/create", protect, createListing);
+router.post("/create", protect, createListing); // Protected
+router.post("/getListByUser/:id", protect, getListingByUserId); // Protected
+router.get("/get", getListings);               // Public
+router.get("/get/:id", getListingById);        // Public
 
 module.exports = router;

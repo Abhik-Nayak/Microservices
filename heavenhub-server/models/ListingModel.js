@@ -21,7 +21,7 @@ const listingSchema = new mongoose.Schema(
     furnished: { type: Boolean, default: false },
     parking: { type: Boolean, default: false },
     propertyType: { type: String, enum: ["sale", "rent"], required: true },
-    images: [{ type: String }], // URLs of uploaded images
+    // images: [{ type: String }], // URLs of uploaded images
   },
   { timestamps: true }
 );
