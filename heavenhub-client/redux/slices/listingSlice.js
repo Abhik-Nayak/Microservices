@@ -6,8 +6,19 @@ export const createListing = createAsyncThunk(
   "listing/createListing",
   async (listingData, thunkAPI) => {
     try {
+      const response = await axios.post("/listings/create", listingData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-      const response = await axios.post("/listings/create",listingData);
+export const getListingById = createAsyncThunk(
+  "listings/getListingById",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await axios.get(`listings/getListByUser/${userId}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
@@ -44,9 +55,22 @@ const listingSlice = createSlice({
       .addCase(createListing.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(getListingById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getListingById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.listings = action.payload; // Update listings with fetched data
+      })
+      .addCase(getListingById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { clearListingState} = listingSlice.actions;
+export const { clearListingState } = listingSlice.actions;
 export default listingSlice.reducer;
