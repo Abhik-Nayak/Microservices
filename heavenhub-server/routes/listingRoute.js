@@ -6,7 +6,7 @@ const {createListing,getListings,getListingById, getListingByUserId} = require('
 
 // Create a new listing
 router.post("/create", protect, createListing); // Protected
-router.get("/getListByUser/:id", protect, getListingByUserId); // Protected
+router.get("/getListByUser", protect, getListingByUserId); // Protected
 router.get("/get", getListings);               // Public
 router.get("/get/:id", getListingById);        // Public
 

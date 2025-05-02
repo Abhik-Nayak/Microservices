@@ -66,7 +66,8 @@ exports.createListing = async (req, res) => {
 // @access  Public
 exports.getListingByUserId = async (req, res) => {
   try {
-    const listings = await Listing.find({ userRef: req.params.id });
+    console.log("User ID:", req.user._id); // Log the user ID for debugging
+    const listings = await Listing.find({ userRef: req.user._id });
 
     if (!listings || listings.length === 0) {
       return sendError(res, 404, "No listings found for this user.");
