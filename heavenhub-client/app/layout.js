@@ -2,6 +2,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "./provide";
 import GoogleAuthWrapper from "./googleAuthWrapper";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 const inter = Inter({
   variable: "--font-inter",
