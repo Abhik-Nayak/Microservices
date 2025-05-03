@@ -89,10 +89,10 @@ export default function ListingCard({
       <Dialog
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        className="fixed z-50 inset-0 overflow-y-auto"
+        className="fixed z-50 inset-0 overflow-y-auto bg-gradient-to-br from-blue-50 via-white to-slate-100"
       >
         <div className="flex items-center justify-center min-h-screen px-4">
-          <Dialog.Panel className="bg-white rounded-lg max-w-6xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Dialog.Panel className="bg-white border border-gray-200 shadow-xl rounded-2xl max-w-6xl w-full mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left: Image Slideshow */}
             <div className="w-full">
               <Slider {...sliderSettings}>
@@ -103,7 +103,7 @@ export default function ListingCard({
                       alt={`Slide ${index + 1}`}
                       width={600}
                       height={400}
-                      className="rounded object-cover w-full"
+                      className="rounded-xl object-cover w-full"
                     />
                   </div>
                 ))}
@@ -112,9 +112,11 @@ export default function ListingCard({
 
             {/* Right: Details */}
             <div>
-              <h2 className="text-2xl font-bold mb-2">{title}</h2>
-              <p className="text-gray-600 mb-1">📍 {location}</p>
-              <p className="text-green-600 font-semibold mb-3">₹{price}</p>
+              <h2 className="text-3xl font-bold text-blue-900 mb-2">{title}</h2>
+              <p className="text-gray-700 mb-1">📍 {location}</p>
+              <p className="text-green-600 text-xl font-semibold mb-4">
+                ₹{price}
+              </p>
 
               <ul className="text-gray-700 text-sm space-y-2 mb-4">
                 <li>
@@ -128,19 +130,19 @@ export default function ListingCard({
                 </li>
               </ul>
 
-              <div className="flex items-center">
+              <div className="flex items-center mt-6">
                 {avatar && (
                   <Image
-                    className="w-10 h-10 rounded-full mr-3"
+                    className="w-12 h-12 rounded-full mr-4 border border-gray-300 shadow-sm"
                     src={avatar}
                     alt="Avatar"
-                    width={40}
-                    height={40}
+                    width={48}
+                    height={48}
                   />
                 )}
                 <div className="text-sm">
-                  <p className="text-gray-900 leading-none">{listedBy}</p>
-                  <p className="text-gray-600">Real Estate Agent</p>
+                  <p className="text-gray-900 font-medium">{listedBy}</p>
+                  <p className="text-gray-500">Real Estate Agent</p>
                 </div>
               </div>
             </div>
