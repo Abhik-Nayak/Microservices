@@ -3,28 +3,63 @@
 import FiltersBar from "@/components/FiltersBar";
 import ListingCard from "@/components/ListingCard";
 import { getListingById } from "@/redux/slices/listingSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ListingsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [propertyDetails, setPropertyDetails] = useState([]);
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1); // Initialize page state
   const { loading, error, success, listings } = useSelector(
     (state) => state.listing
   );
+
+  // Read filters from URL and dispatch listing fetch
+  useEffect(() => {
+    const parsedFilters = {
+      search: searchParams.get("search") || "",
+      priceMin: searchParams.get("priceMin") || "",
+      priceMax: searchParams.get("priceMax") || "",
+      type: searchParams.get("type") || "",
+      page: parseInt(searchParams.get("page") || "1"),
+    };
+
+    setFilters(parsedFilters);
+    setPage(parsedFilters.page);
+    dispatch(getListingById(parsedFilters));
+    // dispatch(getFilteredListings(parsedFilters));
+  }, [searchParams, dispatch]);
+
+  const handleFilterChange = useCallback(
+    (filters) => {
+      const queryParams = new URLSearchParams();
+
+      if (filters.search) queryParams.set("search", filters.search);
+      if (filters.priceMin) queryParams.set("priceMin", filters.priceMin);
+      if (filters.priceMax) queryParams.set("priceMax", filters.priceMax);
+      if (filters.type) queryParams.set("type", filters.type);
+
+      queryParams.set("page", "1"); // reset to page 1
+      router.push(`/dashboard/listings?${queryParams.toString()}`);
+    },
+    [router]
+  );
+
+  // Handle filter changes and update URL
   useEffect(() => {
     if (listings?.content?.data?.length > 0) {
       setPropertyDetails(listings?.content?.data);
     }
     setPropertyDetails(listings?.content?.data);
   }, [listings]);
-  useEffect(() => {
-    dispatch(getListingById());
-  }, [dispatch]);
+
+  // useEffect(() => {
+  //   dispatch(getListingById());
+  // }, [dispatch]);
 
   function getDaysSince(createdAt) {
     const createdDate = new Date(createdAt);
@@ -42,21 +77,6 @@ export default function ListingsPage() {
     return `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
   }
 
-  const handleFilterChange = useCallback(
-    (filters) => {
-      const queryParams = new URLSearchParams();
-
-      if (filters.search) queryParams.set("search", filters.search);
-      if (filters.priceMin) queryParams.set("priceMin", filters.priceMin);
-      if (filters.priceMax) queryParams.set("priceMax", filters.priceMax);
-      if (filters.type) queryParams.set("type", filters.type);
-
-      router.push(`/dashboard/listings?${queryParams.toString()}`);
-      setPage(1);
-      setFilters(filters);
-    },
-    [router]
-  );
   return (
     <div className="px-4 my-16">
       <h1 className="text-3xl font-bold mb-4">Listings</h1>

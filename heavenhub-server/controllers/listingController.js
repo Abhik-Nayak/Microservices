@@ -66,8 +66,31 @@ exports.createListing = async (req, res) => {
 // @access  Public
 exports.getListingByUserId = async (req, res) => {
   try {
-    console.log("User ID:", req.user._id); // Log the user ID for debugging
-    const listings = await Listing.find({ userRef: req.user._id });
+    const { search, priceMin, priceMax, type } = req.query;
+    console.log(search, priceMin, priceMax, type);
+    // Base filter: user-specific listings
+    const query = {
+      userRef: req.user._id,
+    };
+
+    // Add text/location search (adjust the field as per your schema)
+    if (search) {
+      query.location = { $regex: search, $options: "i" }; // case-insensitive
+    }
+
+    // Add price range filter
+    if (priceMin || priceMax) {
+      query.price = {};
+      if (priceMin) query.price.$gte = Number(priceMin);
+      if (priceMax) query.price.$lte = Number(priceMax);
+    }
+
+    // Add type filter (e.g., sale/rent)
+    if (type) {
+      query.type = type;
+    }
+
+    const listings = await Listing.find(query);
 
     if (!listings || listings.length === 0) {
       return sendError(res, 404, "No listings found for this user.");
