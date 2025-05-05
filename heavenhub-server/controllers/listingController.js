@@ -66,42 +66,59 @@ exports.createListing = async (req, res) => {
 // @access  Public
 exports.getListingByUserId = async (req, res) => {
   try {
-    const { search, priceMin, priceMax, type } = req.query;
-    console.log(search, priceMin, priceMax, type);
+    const { search, priceMin, priceMax, type, page = 1 } = req.query;
+    const limit = 5;
+    const skip = (parseInt(page) - 1) * limit;
+
     // Base filter: user-specific listings
     const query = {
       userRef: req.user._id,
     };
 
-    // Add text/location search (adjust the field as per your schema)
+    // Location-based search
     if (search) {
-      query.location = { $regex: search, $options: "i" }; // case-insensitive
+      query.location = { $regex: search, $options: "i" };
     }
 
-    // Add price range filter
+    // Price range
     if (priceMin || priceMax) {
       query.price = {};
       if (priceMin) query.price.$gte = Number(priceMin);
       if (priceMax) query.price.$lte = Number(priceMax);
     }
 
-    // Add type filter (e.g., sale/rent)
+    // Type filter
     if (type) {
       query.type = type;
     }
 
-    const listings = await Listing.find(query);
+    // Get total count (optional, for frontend metadata)
+    const total = await Listing.countDocuments(query);
+
+    // Get paginated listings
+    const listings = await Listing.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
 
     if (!listings || listings.length === 0) {
       return sendError(res, 404, "No listings found for this user.");
     }
 
-    return sendResponse(res, 200, "Listings retrieved successfully", listings);
+    return sendResponse(res, 200, "Listings retrieved successfully", 
+    {
+      data: listings,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      hasMore: parseInt(page) < Math.ceil(total / limit),
+    });
   } catch (error) {
     console.error(error);
     return sendError(res, 500, "Server error");
   }
 };
+
 
 
 // @desc    Get all listings

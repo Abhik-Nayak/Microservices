@@ -4,35 +4,54 @@ import FiltersBar from "@/components/FiltersBar";
 import ListingCard from "@/components/ListingCard";
 import { getListingById } from "@/redux/slices/listingSlice";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ListingsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const loadMoreRef = useRef(null);
+
   const [propertyDetails, setPropertyDetails] = useState([]);
   const [filters, setFilters] = useState({});
-  const [page, setPage] = useState(1); // Initialize page state
-  const { loading, error, success, listings } = useSelector(
-    (state) => state.listing
-  );
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const isFirstLoad = useRef(true);
 
-  // Read filters from URL and dispatch listing fetch
+  const { loading, error, listings } = useSelector((state) => state.listing);
+
+  // Extract filters from URL only once on initial load
   useEffect(() => {
-    const parsedFilters = {
-      search: searchParams.get("search") || "",
-      priceMin: searchParams.get("priceMin") || "",
-      priceMax: searchParams.get("priceMax") || "",
-      type: searchParams.get("type") || "",
-      page: parseInt(searchParams.get("page") || "1"),
-    };
+    if (isFirstLoad.current) {
+      const parsedFilters = {
+        search: searchParams.get("search") || "",
+        priceMin: searchParams.get("priceMin") || "",
+        priceMax: searchParams.get("priceMax") || "",
+        type: searchParams.get("type") || "",
+        page: 1,
+      };
 
-    setFilters(parsedFilters);
-    setPage(parsedFilters.page);
-    dispatch(getListingById(parsedFilters));
-    // dispatch(getFilteredListings(parsedFilters));
-  }, [searchParams, dispatch]);
+      setFilters(parsedFilters);
+      setPage(1);
+      dispatch(getListingById(parsedFilters));
+      isFirstLoad.current = false;
+    }
+  }, []);
+
+  // Update listings when fetched
+  useEffect(() => {
+    const newData = listings?.content?.data?.data || [];
+    const hasMoreData = listings?.content?.data?.hasMore ?? false;
+
+    if (page === 1) {
+      setPropertyDetails(newData);
+    } else {
+      setPropertyDetails((prev) => [...prev, ...newData]);
+    }
+
+    setHasMore(hasMoreData);
+  }, [listings]);
 
   const handleFilterChange = useCallback(
     (filters) => {
@@ -42,39 +61,53 @@ export default function ListingsPage() {
       if (filters.priceMin) queryParams.set("priceMin", filters.priceMin);
       if (filters.priceMax) queryParams.set("priceMax", filters.priceMax);
       if (filters.type) queryParams.set("type", filters.type);
+      queryParams.set("page", "1");
 
-      queryParams.set("page", "1"); // reset to page 1
+      setFilters(filters);
+      setPage(1);
+      setHasMore(true);
+      setPropertyDetails([]);
+      isFirstLoad.current = false;
+
       router.push(`/dashboard/listings?${queryParams.toString()}`);
+      dispatch(getListingById({ ...filters, page: 1 }));
     },
     [router]
   );
 
-  // Handle filter changes and update URL
+  // Infinite scroll observer
   useEffect(() => {
-    if (listings?.content?.data?.length > 0) {
-      setPropertyDetails(listings?.content?.data);
-    }
-    setPropertyDetails(listings?.content?.data);
-  }, [listings]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !loading &&
+          hasMore
+        ) {
+          const nextPage = page + 1;
+          dispatch(getListingById({ ...filters, page: nextPage }));
+          setPage(nextPage);
+        }
+      },
+      { threshold: 1 }
+    );
 
-  // useEffect(() => {
-  //   dispatch(getListingById());
-  // }, [dispatch]);
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [filters, page, hasMore, loading]);
 
   function getDaysSince(createdAt) {
     const createdDate = new Date(createdAt);
     const today = new Date();
-
-    // Calculate difference in milliseconds
-    const diffTime = today - createdDate;
-
-    // Convert milliseconds to full days
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays === 0) {
-      return "Today";
-    }
-
-    return `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
+    const diffDays = Math.floor((today - createdDate) / (1000 * 60 * 60 * 24));
+    return diffDays === 0 ? "Today" : `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
   }
 
   return (
@@ -83,32 +116,33 @@ export default function ListingsPage() {
       <p className="mb-6">All your listings appear here.</p>
       <FiltersBar onFilterChange={handleFilterChange} />
 
-      {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">Error: {error}</p>}
 
-      {propertyDetails?.length > 0 && (
-        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {propertyDetails.map((item, index) => (
-            <ListingCard
-              key={index}
-              image={
-                item?.image ||
-                `/Property${Math.floor(Math.random() * 12) + 1}.jpg`
-              }
-              title={item?.title || "3BHK Luxury Apartment"}
-              location={
-                `${item?.city},${item.state},${item?.country}` ||
-                "Bhubaneswar, Odisha"
-              }
-              price={item?.regularPrice || "85,00,000"}
-              listedBy={item?.listedBy || "Monisha Gajendra"}
-              carParking={item?.parking ? "Yes" : "No" || "2 Slots"}
-              advertised={getDaysSince(item?.createdAt) || "5 days ago"}
-              avatar={item?.avatar || "/img/monisha.jpg"}
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {propertyDetails.map((item, index) => (
+          <ListingCard
+            key={index}
+            image={
+              item?.image ||
+              `/Property${Math.floor(Math.random() * 12) + 1}.jpg`
+            }
+            title={item?.title || "3BHK Luxury Apartment"}
+            location={
+              `${item?.city},${item.state},${item?.country}` ||
+              "Bhubaneswar, Odisha"
+            }
+            price={item?.regularPrice || "85,00,000"}
+            listedBy={item?.listedBy || "Monisha Gajendra"}
+            carParking={item?.parking ? "Yes" : "No" || "2 Slots"}
+            advertised={getDaysSince(item?.createdAt) || "5 days ago"}
+            avatar={item?.avatar || "/img/monisha.jpg"}
+          />
+        ))}
+      </div>
+
+      <div ref={loadMoreRef} className="py-10 text-center">
+        {loading ? <p>Loading more...</p> : hasMore ? <p>Scroll to load more</p> : <p>No more listings</p>}
+      </div>
     </div>
   );
 }
