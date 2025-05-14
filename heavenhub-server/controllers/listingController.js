@@ -102,7 +102,7 @@ exports.getListingByUserId = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (!listings || listings.length === 0) {
-      return sendError(res, 404, "No listings found for this user.");
+      return sendError(res, 404, "No listings found with this search parameter.");
     }
 
     return sendResponse(res, 200, "Listings retrieved successfully", 

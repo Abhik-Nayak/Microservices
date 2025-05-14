@@ -11,32 +11,26 @@ export default function ListingsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const loadMoreRef = useRef(null);
 
   const [propertyDetails, setPropertyDetails] = useState([]);
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const isFirstLoad = useRef(true);
 
   const { loading, error, listings } = useSelector((state) => state.listing);
 
   // Extract filters from URL only once on initial load
   useEffect(() => {
-    if (isFirstLoad.current) {
-      const parsedFilters = {
-        search: searchParams.get("search") || "",
-        priceMin: searchParams.get("priceMin") || "",
-        priceMax: searchParams.get("priceMax") || "",
-        type: searchParams.get("type") || "",
-        page: 1,
-      };
-
-      setFilters(parsedFilters);
-      setPage(1);
-      dispatch(getListingById(parsedFilters));
-      isFirstLoad.current = false;
-    }
+    const parsedFilters = {
+      search: searchParams.get("search") || "",
+      priceMin: searchParams.get("priceMin") || "",
+      priceMax: searchParams.get("priceMax") || "",
+      type: searchParams.get("type") || "",
+      page: 1,
+    };
+    setFilters(parsedFilters);
+    setPage(1);
+    dispatch(getListingById(parsedFilters));
   }, []);
 
   // Update listings when fetched
@@ -61,7 +55,6 @@ export default function ListingsPage() {
       if (filters.priceMin) queryParams.set("priceMin", filters.priceMin);
       if (filters.priceMax) queryParams.set("priceMax", filters.priceMax);
       if (filters.type) queryParams.set("type", filters.type);
-      queryParams.set("page", "1");
 
       setFilters(filters);
       setPage(1);
@@ -72,43 +65,33 @@ export default function ListingsPage() {
       router.push(`/dashboard/listings?${queryParams.toString()}`);
       dispatch(getListingById({ ...filters, page: 1 }));
     },
-    [router]
+    [router, dispatch]
   );
-
-  // Infinite scroll observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0].isIntersecting &&
-          !loading &&
-          hasMore
-        ) {
-          const nextPage = page + 1;
-          dispatch(getListingById({ ...filters, page: nextPage }));
-          setPage(nextPage);
-        }
-      },
-      { threshold: 1 }
-    );
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
-
-    return () => {
-      if (loadMoreRef.current) {
-        observer.unobserve(loadMoreRef.current);
-      }
-    };
-  }, [filters, page, hasMore, loading]);
 
   function getDaysSince(createdAt) {
     const createdDate = new Date(createdAt);
     const today = new Date();
     const diffDays = Math.floor((today - createdDate) / (1000 * 60 * 60 * 24));
-    return diffDays === 0 ? "Today" : `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
+    return diffDays === 0
+      ? "Today"
+      : `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
   }
+
+  useEffect(() => {
+  const handleScroll = () => {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = document.body.offsetHeight +25; // Adjust threshold if needed
+
+    if (scrollPosition >= threshold) {
+      // reachedAtBottom(); // Call your function here
+      console.log("Reached the bottom of the page");
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
 
   return (
     <div className="px-4 my-16">
@@ -128,20 +111,16 @@ export default function ListingsPage() {
             }
             title={item?.title || "3BHK Luxury Apartment"}
             location={
-              `${item?.city},${item.state},${item?.country}` ||
+              `${item?.city}, ${item?.state}, ${item?.country}` ||
               "Bhubaneswar, Odisha"
             }
             price={item?.regularPrice || "85,00,000"}
             listedBy={item?.listedBy || "Monisha Gajendra"}
-            carParking={item?.parking ? "Yes" : "No" || "2 Slots"}
+            carParking={item?.parking ? "Yes" : "No"}
             advertised={getDaysSince(item?.createdAt) || "5 days ago"}
             avatar={item?.avatar || "/img/monisha.jpg"}
           />
         ))}
-      </div>
-
-      <div ref={loadMoreRef} className="py-10 text-center">
-        {loading ? <p>Loading more...</p> : hasMore ? <p>Scroll to load more</p> : <p>No more listings</p>}
       </div>
     </div>
   );
