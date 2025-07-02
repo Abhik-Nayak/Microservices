@@ -16,6 +16,10 @@ const UrlSchema = new Schema(
       type: Number,
       default: 0,
     },
+    expiresAt: {
+      type: Date,
+      required: false, // Optional
+    },
   },
   { timestamps: true }
 )

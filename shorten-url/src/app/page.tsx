@@ -8,7 +8,9 @@ export default function Home() {
   const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('');
-  const [clicks, setClicks] = useState<number | null>(null)
+  const [clicks, setClicks] = useState<number | null>(null);
+  const [expiryDays, setExpiryDays] = useState(7) // Default to 7 days
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,7 +23,8 @@ export default function Home() {
       const res = await fetch('/api/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ originalUrl }),
+        body: JSON.stringify({ originalUrl, expiresInDays: expiryDays })
+
       })
 
       const data = await res.json()
@@ -61,6 +64,15 @@ export default function Home() {
           onChange={(e) => setOriginalUrl(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <input
+          type="number"
+          placeholder="Expires in days (optional)"
+          min={1}
+          value={expiryDays}
+          onChange={(e) => setExpiryDays(Number(e.target.value))}
+          className="w-full px-4 py-2 border rounded mb-4"
+        />
+
         <button
           type="submit"
           disabled={loading}
