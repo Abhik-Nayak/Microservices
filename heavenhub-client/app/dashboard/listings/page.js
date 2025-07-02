@@ -15,7 +15,7 @@ export default function ListingsPage() {
   const [propertyDetails, setPropertyDetails] = useState([]);
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  // const [hasMore, setHasMore] = useState(true);
 
   const { loading, error, listings } = useSelector((state) => state.listing);
 
@@ -31,7 +31,7 @@ export default function ListingsPage() {
     setFilters(parsedFilters);
     setPage(1);
     dispatch(getListingById(parsedFilters));
-  }, []);
+  }, [dispatch, searchParams]);
 
   // Update listings when fetched
   useEffect(() => {
@@ -44,8 +44,8 @@ export default function ListingsPage() {
       setPropertyDetails((prev) => [...prev, ...newData]);
     }
 
-    setHasMore(hasMoreData);
-  }, [listings]);
+    // setHasMore(hasMoreData);
+  }, [listings,page]);
 
   const handleFilterChange = useCallback(
     (filters) => {
@@ -58,7 +58,7 @@ export default function ListingsPage() {
 
       setFilters(filters);
       setPage(1);
-      setHasMore(true);
+      // setHasMore(true);
       setPropertyDetails([]);
       isFirstLoad.current = false;
 
@@ -78,20 +78,19 @@ export default function ListingsPage() {
   }
 
   useEffect(() => {
-  const handleScroll = () => {
-    const scrollPosition = window.innerHeight + window.scrollY;
-    const threshold = document.body.offsetHeight +25; // Adjust threshold if needed
+    const handleScroll = () => {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.body.offsetHeight + 25; // Adjust threshold if needed
 
-    if (scrollPosition >= threshold) {
-      // reachedAtBottom(); // Call your function here
-      console.log("Reached the bottom of the page");
-    }
-  };
+      if (scrollPosition >= threshold) {
+        // reachedAtBottom(); // Call your function here
+        console.log("Reached the bottom of the page");
+      }
+    };
 
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="px-4 my-16">

@@ -1,0 +1,20 @@
+// src/models/Url.ts
+import mongoose, { Schema, model, models } from 'mongoose'
+
+const UrlSchema = new Schema(
+  {
+    shortId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    originalUrl: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+)
+
+const Url = models.Url || model('Url', UrlSchema)
+export default Url
