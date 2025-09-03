@@ -49,6 +49,16 @@ paths:
         200:
           description: Logout successful
 
+  /api/user/refresh:
+    post:
+      summary: Rotate refresh token and issue new access token
+      tags: [Auth]
+      responses:
+        200:
+          description: Token refreshed
+        401:
+          description: Missing/invalid refresh token
+
   /api/user/user:
     get:
       summary: Get current user
