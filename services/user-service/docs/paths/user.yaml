@@ -49,6 +49,16 @@ paths:
         200:
           description: Logout successful
 
+  /api/user/dev/purge:
+    delete:
+      summary: Purge all user-service data (dev only)
+      tags: [Dev]
+      responses:
+        200:
+          description: All data purged
+        403:
+          description: Forbidden in production
+
   /api/user/refresh:
     post:
       summary: Rotate refresh token and issue new access token
