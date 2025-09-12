@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: userservice
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_service
+    username: postgres
+    password: postgres
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080
+
+
+# ✅ Explanation:
+# controller: For handling HTTP requests
+# service: Business logic
+# repository: Data access layer
+# model: Entity classes
+# dto: Request/Response payload models
+# config: Security and other configuration files
