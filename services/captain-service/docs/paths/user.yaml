@@ -1,0 +1,99 @@
+paths:
+  /api/user/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        201:
+          description: User created successfully
+
+  /api/user/login:
+    post:
+      summary: Login user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        200:
+          description: Login successful
+
+  /api/user/logout:
+    post:
+      summary: Logout user
+      tags: [Auth]
+      responses:
+        200:
+          description: Logout successful
+
+  /api/user/dev/purge:
+    delete:
+      summary: Purge all user-service data (dev only)
+      tags: [Dev]
+      responses:
+        200:
+          description: All data purged
+        403:
+          description: Forbidden in production
+
+  /api/user/refresh:
+    post:
+      summary: Rotate refresh token and issue new access token
+      tags: [Auth]
+      responses:
+        200:
+          description: Token refreshed
+        401:
+          description: Missing/invalid refresh token
+
+  /api/user/user:
+    get:
+      summary: Get current user
+      tags: [User]
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Current user
+    put:
+      summary: Update current user
+      tags: [User]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+      responses:
+        200:
+          description: User updated successfully
+
+
