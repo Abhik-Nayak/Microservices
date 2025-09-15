@@ -36,6 +36,7 @@ export const register = async (req, res) => {
         //     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         // });
         // setAuthCookies(res, accessToken, refreshToken);
+        delete user._doc.password;
         res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
