@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, logout, getUser, updateUser, refresh, devPurge } from '../controllers/user.controller.js';
+import { register, login, logout, getUser, updateUser, refresh, devPurge, toggleAvailability } from '../controllers/captain.controller.js';
 import { userAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -17,5 +17,7 @@ router.delete('/dev/purge', devPurge);
 router.get('/user', userAuth, getUser);
 
 router.put('/user', userAuth, updateUser);
+
+router.patch('/toggle-availability', userAuth, toggleAvailability);
 
 export default router;

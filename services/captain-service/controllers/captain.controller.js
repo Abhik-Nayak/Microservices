@@ -1,4 +1,4 @@
-import userModel from '../models/user.model.js';
+import userModel from '../models/captain.model.js';
 import refreshTokenModel from '../models/refreshToken.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -28,14 +28,6 @@ export const register = async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userModel.create({ name, email, password: hashedPassword  });
-        // const accessToken = generateAccessToken(user._id);
-        // const refreshToken = generateRefreshToken(user._id);
-        // await refreshTokenModel.create({
-        //     userId: user._id,
-        //     token: refreshToken,
-        //     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-        // });
-        // setAuthCookies(res, accessToken, refreshToken);
         res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
@@ -151,5 +143,17 @@ export const devPurge = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export const toggleAvailability = async (req, res) => {
+    try {
+        const captain = await userModel.findById(req.user.id);
+        captain.isAvailable = !captain.isAvailable;
+        await captain.save();
+        res.send(captain);
+    } catch (error) {
+
+        res.status(500).json({ message: error.message });
     }
 }
