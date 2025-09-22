@@ -1,24 +1,23 @@
 package com.fitness.activityservice.model;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @Document(collection = "activities")
-@Data  //for boilerplate methods.
-@Builder  //for easy object creation.
-@AllArgsConstructor  //when you want to create with all values directly.
-@NoArgsConstructor   //required for frameworks (Spring Data MongoDB in your case).
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Activity {
     @Id
     private String id;
@@ -37,5 +36,3 @@ public class Activity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 }
-
-
