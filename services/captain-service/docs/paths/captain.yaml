@@ -1,7 +1,7 @@
 paths:
-  /api/user/register:
+  /api/captain/register:
     post:
-      summary: Register a new user
+      summary: Register a new capatain
       tags: [Auth]
       requestBody:
         required: true
@@ -23,7 +23,7 @@ paths:
         201:
           description: User created successfully
 
-  /api/user/login:
+  /api/captain/login:
     post:
       summary: Login user
       tags: [Auth]
@@ -41,7 +41,7 @@ paths:
         200:
           description: Login successful
 
-  /api/user/logout:
+  /api/captain/logout:
     post:
       summary: Logout user
       tags: [Auth]
@@ -49,7 +49,7 @@ paths:
         200:
           description: Logout successful
 
-  /api/user/dev/purge:
+  /api/captain/dev/purge:
     delete:
       summary: Purge all user-service data (dev only)
       tags: [Dev]
@@ -59,7 +59,7 @@ paths:
         403:
           description: Forbidden in production
 
-  /api/user/refresh:
+  /api/captain/refresh:
     post:
       summary: Rotate refresh token and issue new access token
       tags: [Auth]
@@ -69,7 +69,7 @@ paths:
         401:
           description: Missing/invalid refresh token
 
-  /api/user/user:
+  /api/captain/user:
     get:
       summary: Get current user
       tags: [User]

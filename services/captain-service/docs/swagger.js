@@ -6,6 +6,9 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+console.log(__filename);
+console.log(__dirname);
+
 const swaggerSpec = swaggerJsdoc({
     definition: {
         openapi: '3.0.0',
@@ -29,7 +32,7 @@ const swaggerSpec = swaggerJsdoc({
     // Load YAML files from docs/paths for scalability
     apis: [path.join(__dirname, './paths/*.yaml')]
 });
-
+console.log(swaggerSpec)
 export default swaggerSpec;
 
 
