@@ -9,6 +9,10 @@ spring:
       # username: your_username   # uncomment if authentication is enabled
       # password: your_password   # uncomment if authentication is enabled
       # authentication-database: admin
+  eureka:
+    client:
+      serviceUrl:
+        defaultZone: http://localhost:8761/eureka/
 
 server:
   port: 8082   # change port if needed
