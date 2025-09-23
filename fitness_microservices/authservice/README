@@ -1,0 +1,31 @@
+# 📦 Project Dependencies
+
+This Spring Boot project uses the following dependencies:
+
+| Dependency                       | Description / Use Case                                                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **spring-boot-starter-data-jpa** | Adds Spring Data JPA support. Provides integration with Hibernate for ORM and simplifies CRUD operations on relational databases.     |
+| **spring-boot-starter-mail**     | Adds JavaMail support to send emails (SMTP). Useful for sending account activation, password resets, and notifications.               |
+| **spring-boot-starter-security** | Adds Spring Security framework for authentication, authorization, and securing REST APIs. Integrates seamlessly with JWT.             |
+| **spring-boot-starter-web**      | Adds Spring MVC, embedded Tomcat, and Jackson support for building RESTful APIs and web applications.                                 |
+| **spring-boot-docker-compose**   | Integrates with Docker Compose to run and manage external services (like databases) during development.                               |
+| **postgresql**                   | PostgreSQL JDBC driver that enables the application to communicate with a PostgreSQL database.                                        |
+| **lombok**                       | A compile-time library to reduce boilerplate code by generating getters, setters, constructors, builders, etc. (requires IDE plugin). |
+| **spring-boot-starter-test**     | Provides testing libraries such as JUnit, AssertJ, Mockito, and Spring Test for unit and integration testing.                         |
+| **spring-security-test**         | Adds test utilities for Spring Security, allowing you to test secure endpoints and mock authentication/authorization.                 |
+| **jjwt-api**                     | JSON Web Token (JWT) API from io.jsonwebtoken. Provides interfaces and classes to create and parse JWTs.                              |
+| **jjwt-impl**                    | Runtime implementation of the above API. Required to actually generate/validate JWT tokens.                                           |
+| **jjwt-jackson**                 | Adds Jackson support for JWT claims serialization/deserialization to handle claims as JSON automatically.                             |
+
+---
+
+### 📝 Summary
+
+* **JPA + PostgreSQL** → persist and query data.
+* **Spring Security + JJWT** → secure APIs with JWT tokens for stateless authentication.
+* **Spring Mail** → send email notifications.
+* **Lombok** → reduce boilerplate in entities/DTOs.
+* **Docker Compose** → spin up Postgres or other services automatically for development.
+* **Test dependencies** → unit/integration testing with mock security contexts.
+
+---
