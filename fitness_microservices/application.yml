@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: authservice
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fitnessapp_auth_service
+    username: postgres
+    password: postgres
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "nayakabhik98@gmail.com"
+    password: "rhya jegd oiqm puvr"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
