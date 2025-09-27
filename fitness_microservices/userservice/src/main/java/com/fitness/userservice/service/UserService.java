@@ -61,6 +61,7 @@ public class UserService {
     }
 
     public Boolean existByUserId(String userId) {
+        log.info("Calling user Service for {}", userId);
         return repository.existsById(userId);
     }
 
